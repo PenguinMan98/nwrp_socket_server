@@ -56,7 +56,7 @@
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://nwrp-sockets.local:3000/socket.io/socket.io.js"></script>
 <script src="js/login.js"></script>
-<script src="js/mediator.js"></script>
+<script src="js/chat.js"></script>
 <script src="js/sockets.js"></script>
 <script>
     var socket = io('http://localhost:3000');
@@ -65,6 +65,7 @@
     var loginElem = null;
     var chatElem = null;
     var chatMessagesElem = null;
+    var chatMessageInput = null;
 
     var loggedIn = <?=$loggedIn?'true':'false'?>;
     var username = "<?=$username?>";
@@ -78,6 +79,8 @@
         loginElem = $('.login.page');
         chatElem = $('.chat.page');
         chatMessagesElem = $('.chat.page .messages');
+        chatMessageInput = $('.inputMessage');
+        var shiftDown = false;
 
         // primary setup
         if( loggedIn ){
@@ -91,8 +94,33 @@
                 initializeChat( username, token, handle, roomId );
                 chatElem.show();
 
-                socket.emit('new post', {
+                /*socket.emit('new post', {
                     text: "This is a test <b>This should NOT be bolded</b> [b]This SHOULD be bolded[/b]."
+                });*/
+                // set up the listeners
+
+                chatMessageInput.on('keydown', function( e ){
+                    if(e.which == 16){
+                        shiftDown = true;
+                    }
+                });
+                chatMessageInput.on('keyup', function( e ){
+                    if(!shiftDown && e.which == 13){ // just a regular enter key
+                        console.log('Enter Pressed!');
+
+                        socket.emit('new post', {
+                            username: username, // The name of the user account
+                            handle: handle, // the currently active character
+                            token: token, // The validation token
+                            roomId: roomId, // the id of the room they are in (or 0 if PM)
+                            clientGUID: handle + Date.now(), // a unique identifier for this post specific to this client instance. handle+timestamp
+                            text: chatMessageInput.val()
+                        });
+                        chatMessageInput.val('');
+                    }
+                    if(e.which == 16){
+                        shiftDown = false;
+                    }
                 });
             }
         }else{

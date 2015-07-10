@@ -1,4 +1,3 @@
-
 /*============= Sending ==============*/
 
 // Gets a character list
@@ -51,7 +50,10 @@ function initSocketListeners( socket ){
         }
     });
 
-    /*socket.on('new post', function(data){
-        chatMessageElem.append(data.newPost);
-    });*/
+    socket.on('new post', function(data){
+        console.log('I got a new post!', data);
+
+        chatMessagesElem.append( data.formattedLine );
+        //chatMessageElem.append(data.newPost);
+    });
 }

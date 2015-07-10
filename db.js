@@ -5,9 +5,8 @@ var pool = mysql.createPool({
     password: '',
     database: 'mlpnwrp'
 });
-var _ = require('lodash');
-var BBCodeParser = require('bbcode-parser');
-var parser = new BBCodeParser(BBCodeParser.joesTags());
+var chat = require('./chat.js');
+
 
 module.exports = {
     init: function( callback ){
@@ -42,7 +41,7 @@ module.exports = {
                     err: err
                 });
             }else if( rows.length == 50){
-                var formatted_rows = formatRows(rows);
+                var formatted_rows = chat.formatRows(rows);
                 callback({
                     success: true,
                     roomId: roomId,
@@ -71,44 +70,3 @@ module.exports = {
     }
 };
 
-function formatRows(rows){
-    var formattedRows = [];
-    for(var i=0; i<rows.length; i++){
-        formattedRows.push(formatChatLine(rows[i]));
-    }
-    return formattedRows;
-}
-
-function formatChatLine(post){
-    if(typeof post == 'undefined'){ return false; }
-
-    var date = new Date(post.timestamp*1000);
-    var liStyle = "color: #ddd;";
-    var charNameStyle = 'color: '+post.chat_name_color+';';
-    var charTextStyle = 'color: '+post.chat_text_color+';';
-    var html;
-    // parser parses bbcode, lodash unescape converts html entities to html
-    var formattedText = _.unescape(parser.parseString(post.text));
-
-    //console.log('post', post, formattedText);
-
-    html = '<li data-id="'+post.chat_log_id+'" class="chat line" style="'+liStyle+'">' +
-    '<span title="'+post.f_date+'" class="chat date" style="">'+post.f_time+'</span>';
-
-    if(formattedText.indexOf("/me") === 0){
-        html += '' +
-        ': <span class="chat name" style="'+charNameStyle+'">'+post.handle+' ' +
-        ''+formattedText.substr(3)+'</span>';
-    }else if(formattedText.indexOf("//") === 0){
-        html += '' +
-        ' <span class="chat name" style="'+charNameStyle+'">'+post.handle+'</span>: ' +
-        '(( <span class="chat text" style="'+charTextStyle+'">'+formattedText.substr(2)+'</span> ))';
-    }else{
-        html += '' +
-        ' <span class="chat name" style="'+charNameStyle+'">'+post.handle+'</span>: ' +
-        '<span class="chat text" style="'+charTextStyle+'">'+formattedText+'</span>';
-    }
-    html += '</li>';
-
-    return _.unescape(html);
-}

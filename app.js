@@ -7,6 +7,7 @@ var port = process.env.PORT || 3000;
 
 // include my stuff
 var db = require('./db.js');
+var chat = require('./chat.js');
 var async = require('async');
 var stripper = require('striptags');
 var BBCodeParser = require('bbcode-parser');
@@ -89,16 +90,16 @@ io.on('connection', function (socket) {
     });
 
     socket.on('new post', function(data){
+        console.log('new post', JSON.stringify(data));
         // strip the html code
-        var formattedText = stripper(data.text);
+        data.text = stripper(data.text);
         // parse the bbcode
-        formattedText = parser.parseString(formattedText);
-        console.log('new post', data.text, formattedText);
+        data.text = parser.parseString(data.text);
+        console.log('new post', JSON.stringify(data));
+
 
         // send the result to everybody even me
-        socket.emit('new post', {
-            text: formattedText
-        });
+        socket.emit('new post', data);
 
         // store it in the db
     });
