@@ -25,6 +25,8 @@ html, body {
     margin: 0;
     padding: 0;
     background-color: black;
+    color: #ddd;
+    font-size: 16px;
 }
 
 ul {
@@ -67,7 +69,7 @@ ul {
 .login.page .form .usernameInput {
     background-color: transparent;
     border: none;
-    border-bottom: 2px solid #fff;
+    border-bottom: 2px solid #ddd;
     outline: none;
     padding-bottom: 15px;
     text-align: center;
@@ -84,7 +86,7 @@ ul {
 }
 
 .login.page .title, .login.page .usernameInput {
-    color: #fff;
+    color: #ddd;
     font-weight: 100;
 }
 
@@ -108,7 +110,7 @@ ul {
 .characterChoice.page .form .usernameInput {
     background-color: transparent;
     border: none;
-    border-bottom: 2px solid #fff;
+    border-bottom: 2px solid #ddd;
     outline: none;
     padding-bottom: 15px;
     text-align: center;
@@ -125,21 +127,15 @@ ul {
 }
 
 .characterChoice.page .title, .login.page .usernameInput {
-    color: #fff;
+    color: #ddd;
     font-weight: 100;
-}
-
-/* Chat page */
-
-.chat.page {
-    display: none;
 }
 
 /* Font */
 
 .messages {
     font-size: 150%;
-    color: white;
+    color: #ddd;
 }
 
 .inputMessage {
@@ -153,11 +149,41 @@ ul {
     text-align: center;
 }
 
-/* Messages */
+/* Chat Page */
+
+.nav li{
+    display: inline-block;
+}
+.top{
+    border-bottom: 2px solid #ddd;
+}
+.top.nav{
+    line-height: 1.5em;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.column{
+    margin: 0px;
+    padding: .2em;
+}
+.right.column{
+    width: 13em;
+    position: absolute;
+    top: 0;
+    right: -13em;
+    height: calc(100% - 2em);
+}
+
+.chat.page {
+    display: none;
+}
 
 .chatArea {
-    height: 100%;
-    padding-bottom: 60px;
+    height: calc(100% - 2em);
+    padding-bottom: 4em;
+    width: calc(100% - 13em);
+    position: relative;
 }
 
 .messages {
@@ -182,9 +208,11 @@ ul {
 /* Input */
 
 .inputMessage {
-    border: 10px solid #000;
+    border-top: 2px solid #ddd;
+    background-color: black;
+    color: #ddd;
     bottom: 0;
-    height: 60px;
+    height: 2em;
     left: 0;
     outline: none;
     padding-left: 10px;

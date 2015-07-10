@@ -270,3 +270,38 @@ $(function() {
         removeChatTyping(data);
     });
 });
+
+Q = (function () {
+    var proto = {
+        sub: function (t, c) {
+            if (this.s.length == 1) {
+                this.s[t] = [];
+            }
+
+            this.s[t].push(c);
+        },
+        pub: function (t, d) {
+            if (d == undefined || !this.s[t] || this.s.t < 1) {
+                return new Promise(function (rs, rj) {
+                    rs();
+                });
+            } else {
+                return Promise.all(this.s[t].map(function (c) {
+                    return c(d || {});
+                }));
+            }
+
+        }
+
+    };
+
+    return {
+        prototype: proto,
+        cre: function () {
+            var ret = Object.create(proto);
+            ret.s = {};
+            return ret;
+        }
+    };
+
+}());

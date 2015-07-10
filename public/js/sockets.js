@@ -25,6 +25,9 @@ function initializeChat ( username, token, handle, roomId ) {
     };
     // tell server to execute 'get characters' and send along one parameter
     socket.emit('init', message);
+
+    // local setup.
+    $('.inputMessage')
 }
 
 /*============= Receiving ==============*/
@@ -44,19 +47,11 @@ function initSocketListeners( socket ){
     socket.on('last_posts', function (data) {
         console.log('last_posts received', data, chatMessagesElem);
         for(var i = 0; i < data.last_posts.length; i++ ){
-            chatMessagesElem.append(formatChatLine(data.last_posts[i]));
-            //chatMessagesElem.append('<li>'+post.handle+'@'+post.timestamp+': '+post.text+'</li>');
+            chatMessagesElem.append(data.last_posts[i]);
         }
     });
 
-}
-
-function formatChatLine(post){
-    // todo: handle /me and //
-
-    var date = new Date(post.timestamp*1000);
-    var formattedDate = '';
-
-    var html = '<li>'+post.handle+'@'+post.timestamp+': '+post.text+'</li>';
-    return html;
+    /*socket.on('new post', function(data){
+        chatMessageElem.append(data.newPost);
+    });*/
 }

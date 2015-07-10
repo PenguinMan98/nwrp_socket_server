@@ -4,8 +4,13 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3000;
+
+// include my stuff
 var db = require('./db.js');
 var async = require('async');
+var stripper = require('striptags');
+var BBCodeParser = require('bbcode-parser');
+var parser = new BBCodeParser(BBCodeParser.joesTags());
 
 server.listen(port, function () {
     console.log('Server listening at port %d', port);
@@ -83,6 +88,20 @@ io.on('connection', function (socket) {
 
     });
 
+    socket.on('new post', function(data){
+        // strip the html code
+        var formattedText = stripper(data.text);
+        // parse the bbcode
+        formattedText = parser.parseString(formattedText);
+        console.log('new post', data.text, formattedText);
+
+        // send the result to everybody even me
+        socket.emit('new post', {
+            text: formattedText
+        });
+
+        // store it in the db
+    });
 
     /*// when the client emits 'new message', this listens and executes
     socket.on('new message', function (data) {

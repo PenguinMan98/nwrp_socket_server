@@ -19,7 +19,12 @@
 <body>
 <ul class="pages">
     <li class="chat page">
+        <div class="top nav">This is where the menu goes</div>
+        <div class="top announcements">This will hold site announcements.</div>
         <div class="chatArea">
+            <div class="right column">
+                This is the right hand column
+            </div>
             <ul class="messages"></ul>
         </div>
         <input class="inputMessage" placeholder="Type here..."/>
@@ -85,6 +90,10 @@
                 initSocketListeners( socket );
                 initializeChat( username, token, handle, roomId );
                 chatElem.show();
+
+                socket.emit('new post', {
+                    text: "This is a test <b>This should NOT be bolded</b> [b]This SHOULD be bolded[/b]."
+                });
             }
         }else{
             loginElem.show();
