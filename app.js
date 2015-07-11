@@ -10,8 +10,26 @@ var db = require('./db.js');
 var chat = require('./chat.js');
 var async = require('async');
 var stripper = require('striptags');
+{
+    var BBTag = require('bbcode-parser/bbTag');
+    var bbTags = new Array();
+//Simple tags
+    bbTags["b"] = new BBTag("b", true, false, false);
+    bbTags["i"] = new BBTag("i", true, false, false);
+    bbTags["u"] = new BBTag("u", true, false, false);
+    bbTags["url"] = new BBTag("url", true, false, false, function (tag, content, attr) {
+        var link = content;
+        if (attr["url"] != undefined) {
+            link = escapeHTML(attr["url"]);
+        }
+        if (!startsWith(link, "http://") && !startsWith(link, "https://")) {
+            link = "http://" + link;
+        }
+        return "<a href=\"" + link + "\" target=\"_blank\">" + content + "</a>";
+    });
+}
 var BBCodeParser = require('bbcode-parser');
-var parser = new BBCodeParser(BBCodeParser.joesTags());
+var parser = new BBCodeParser( bbTags );
 
 server.listen(port, function () {
     console.log('Server listening at port %d', port);
