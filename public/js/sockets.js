@@ -60,9 +60,9 @@ function initSocketListeners( socket ){
     });
 
     socket.on('new post', function(data){
-        console.log('I got a new post!', data);
+        console.log('I got a new post!', data, chatMessagesElem);
 
-        chatMessagesElem.append( data.formattedLine );
+        chatMessagesElem.append( data.fLine );
         //chatMessageElem.append(data.newPost);
     });
 }

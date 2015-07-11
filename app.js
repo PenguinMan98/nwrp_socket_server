@@ -92,21 +92,21 @@ io.on('connection', function (socket) {
     socket.on('new post', function(data){
         console.log('new post', JSON.stringify(data));
         var formattedData = {
-            chat_log_id: '',
-            chat_room_id: '',
+            chat_log_id: null,
+            chat_room_id: data.roomId,
             user_id: '',
-            handle: '',
-            character_id: '',
+            handle: data.characterData.name,
+            character_id: data.characterData.character_id,
             recipient_user_id: '',
             recipient_username: '',
-            text: '',
+            text: data.text,
             timestamp: '',
-            chat_name_color: '',
+            chat_name_color: data.characterData.chat_name_color,
             chat_rand: '',
-            chat_text_color: '',
+            chat_text_color: data.characterData.chat_text_color,
             chat_log_type_id: '',
             viewed: '',
-            icon: '',
+            icon: data.characterData.icon,
             f_time: '',
             f_date: ''
         };
