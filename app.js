@@ -53,7 +53,7 @@ io.on('connection', function (socket) {
                             console.log('sending character_list');
                             socket.emit( 'character_list', {
                                 roomId: dbResp.roomId,
-                                last_posts: dbResp.public_characters // the most recent 50 posts
+                                public_characters: dbResp.public_characters // the most recent 50 posts
                             } );
                          }else{
                             console.log('ERROR!', dbResp.err);
@@ -91,10 +91,27 @@ io.on('connection', function (socket) {
 
     socket.on('new post', function(data){
         console.log('new post', JSON.stringify(data));
-        // strip the html code
-        data.text = stripper(data.text);
-        // parse the bbcode
-        data.text = parser.parseString(data.text);
+        var formattedData = {
+            chat_log_id: '',
+            chat_room_id: '',
+            user_id: '',
+            handle: '',
+            character_id: '',
+            recipient_user_id: '',
+            recipient_username: '',
+            text: '',
+            timestamp: '',
+            chat_name_color: '',
+            chat_rand: '',
+            chat_text_color: '',
+            chat_log_type_id: '',
+            viewed: '',
+            icon: '',
+            f_time: '',
+            f_date: ''
+        };
+        data.fLine = chat.formatChatLine(formattedData);
+
         console.log('new post', JSON.stringify(data));
 
 

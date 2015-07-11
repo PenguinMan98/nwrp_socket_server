@@ -3,7 +3,7 @@ var pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'mlpnwrp'
+    database: 'nwrp_stripped'
 });
 var chat = require('./chat.js');
 
@@ -51,8 +51,8 @@ module.exports = {
         });
     },
     getLoggedInCharacters: function( connection, roomId, callback ){
-        console.log('getting character details for room ', roomId);
-        connection.query('SELECT c.character_id, c.name, c.status, c.icon, c.chat_name_color, c.chat_text_color, c.chat_status_id, c.character_race_id, c.cutie_mark, UNIX_TIMESTAMP() - c.last_activity AS \'idle_timer\', c.chat_room_id FROM `character` c WHERE c.logged_in=1;', [], function(err, rows, fields) {
+        //console.log('getting character details for room ', roomId);
+        connection.query('SELECT c.character_id, c.name, c.status, c.icon, c.chat_name_color, c.chat_text_color, c.chat_status_id, c.character_race_id, c.cutie_mark, UNIX_TIMESTAMP() - c.last_activity AS \'idle_timer\', c.chat_room_id FROM `character` c JOIN `character_login_log` cll ON c.character_id=cll.character_id WHERE cll.login_active=1;', [], function(err, rows, fields) {
             if (err){
                 callback({
                     success: false,

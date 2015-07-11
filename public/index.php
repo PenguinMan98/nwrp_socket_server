@@ -66,6 +66,8 @@
     var chatElem = null;
     var chatMessagesElem = null;
     var chatMessageInput = null;
+    var characterData = [];
+    var myCharacterData = null;
 
     var loggedIn = <?=$loggedIn?'true':'false'?>;
     var username = "<?=$username?>";
@@ -110,7 +112,7 @@
 
                         socket.emit('new post', {
                             username: username, // The name of the user account
-                            handle: handle, // the currently active character
+                            characterData: myCharacterData, // the currently active character
                             token: token, // The validation token
                             roomId: roomId, // the id of the room they are in (or 0 if PM)
                             clientGUID: handle + Date.now(), // a unique identifier for this post specific to this client instance. handle+timestamp

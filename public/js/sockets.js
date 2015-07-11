@@ -34,12 +34,21 @@ function initSocketListeners( socket ){
     console.log('listening for socket traffic', socket);
     // listen for chat initialization
     socket.on('chat_init', function (data) {
-        console.log('chat_init received', data);
+        //console.log('chat_init received', data);
     });
 
     // listen for public_characters
     socket.on('character_list', function (data) {
         console.log('character_list received', data);
+        var char;
+        for(var i = 0; i < data.public_characters.length; i++){
+            char = data.public_characters[i];
+            characterData.push(char);
+
+            if(char.name == handle){
+                myCharacterData = char;
+            }
+        }
     });
 
     // listen for posts

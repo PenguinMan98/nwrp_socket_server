@@ -21,6 +21,7 @@ module.exports = {
 
     formatChatLine: function(post){
         if(typeof post == 'undefined'){ return false; }
+        console.log('formatChatLine', JSON.stringify(post));
 
         var date = new Date(post.timestamp*1000);
         var liStyle = "color: #ddd;";
