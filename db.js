@@ -67,6 +67,41 @@ module.exports = {
                 })
             }
         });
+    },
+    insertNewPost: function( connection, data, callback ){
+        console.log('insertNewPost', data);
+        connection.query('INSERT INTO chat_log (`chat_room_id`,`user_id`,`handle`,`character_id`,' +
+            '`recipient_user_id`,`recipient_username`,`text`,`timestamp`,`chat_name_color`,' +
+            '`chat_rand`,`chat_text_color`,`chat_log_type_id`,`viewed` ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);',
+            [
+                data.chat_room_id,
+                data.user_id,
+                data.handle,
+                data.character_id,
+                data.recipient_user_id,
+                data.recipient_username,
+                data.text,
+                data.timestamp,
+                data.chat_name_color,
+                data.chat_rand,
+                data.chat_text_color,
+                data.chat_log_type_id,
+                data.viewed
+            ], function(err, rows, fields) {
+            if (err){
+                callback({
+                    success: false,
+                    err: err
+                });
+            }else if( rows.length > 0){
+
+                callback({
+                    success: true,
+                    roomId: roomId,
+                    public_characters: rows
+                })
+            }
+        });
     }
 };
 

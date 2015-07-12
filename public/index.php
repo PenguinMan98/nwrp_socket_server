@@ -6,6 +6,7 @@
     // todo: Check if we are logged in or not
     $loggedIn = true;
     $username = "Tek Croon";
+    $userId = "2";
     $handle = "Tek_Croon";
     $token = "pengy98";
     $roomId = 1;
@@ -71,6 +72,7 @@
 
     var loggedIn = <?=$loggedIn?'true':'false'?>;
     var username = "<?=$username?>";
+    var userId = "<?=$userId?>";
     var handle = "<?=$handle?>";
     var token = "<?=$token?>";
     var roomId = "<?=$roomId?>";
@@ -112,6 +114,7 @@
 
                         socket.emit('new post', {
                             username: username, // The name of the user account
+                            userId: userId, // The name of the user account
                             characterData: myCharacterData, // the currently active character
                             token: token, // The validation token
                             roomId: roomId, // the id of the room they are in (or 0 if PM)

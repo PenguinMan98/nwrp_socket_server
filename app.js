@@ -115,36 +115,49 @@ io.on('connection', function (socket) {
         console.log('new post', JSON.stringify(data));
         var tsMicro = new Date();
         var ts = Math.floor(tsMicro / 1000);
+        var thisMoment = moment().utcOffset(-5);
         var isPrivate = data.recipient_username ? true : false;
         var isSystem = false; // todo: implement system commands
         var formattedData = {
             chat_log_id: null,
             chat_room_id: data.roomId,
-            user_id: '',
+            user_id: data.userId,
             handle: data.characterData.name,
             character_id: data.characterData.character_id,
             recipient_user_id: '',
             recipient_username: '',
             text: data.text,
-            timestamp: ts,
+            timestamp: thisMoment.unix(),
             chat_name_color: data.characterData.chat_name_color,
             chat_rand: tsMicro,
             chat_text_color: data.characterData.chat_text_color,
             chat_log_type_id: isPrivate ? 2 : isSystem ? 3 : 1,
-            viewed: '',
+            viewed: isPrivate ? 0 : 1,
             icon: data.characterData.icon,
-            f_time: moment().add(1, 'hours').format('hh:mm:ss A'),
-            f_date: moment().add(1, 'hours').format('ddd, MMM M')
+            f_time: thisMoment.format('hh:mm:ss A'),
+            f_date: thisMoment.format('ddd, MMM M')
         };
         data.fLine = chat.formatChatLine(formattedData);
-
-        console.log('new post', JSON.stringify(data));
-
 
         // send the result to everybody even me
         socket.emit('new post', data);
 
         // store it in the db
+        // initialize the db
+        db.init(function(err, connection){
+            // first lets check the user credentials
+            db.validateUser(connection, data.username, data.token, function( dbResp ){
+                if( dbResp.validated ){
+                    db.insertNewPost( connection, formattedData, function( dbResp ){
+                        if(dbResp.success){
+                            socket.emit('new post sync', {
+
+                            });
+                        }
+                    });
+                }
+            })
+        });
     });
 
     /*// when the client emits 'new message', this listens and executes
