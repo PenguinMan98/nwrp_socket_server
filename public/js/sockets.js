@@ -2,8 +2,6 @@
 
 // Gets a character list
 function getCharacterList ( username, token ) {
-    console.log('Asking for character list');
-
     var message = {
         username: username,
         token: token
@@ -14,8 +12,6 @@ function getCharacterList ( username, token ) {
 
 // sends a request to initialize the chat.
 function initializeChat ( username, token, handle, roomId ) {
-    console.log('initializing the chat');
-
     var message = {
         username: username,
         handle: handle,
@@ -31,7 +27,6 @@ function initializeChat ( username, token, handle, roomId ) {
 
 /*============= Receiving ==============*/
 function initSocketListeners( socket ){
-    console.log('listening for socket traffic', socket);
     // listen for chat initialization
     socket.on('chat_init', function (data) {
         //console.log('chat_init received', data);
@@ -53,29 +48,25 @@ function initSocketListeners( socket ){
 
     // listen for posts
     socket.on('last_posts', function (data) {
-        console.log('last_posts received', data, chatMessagesElem);
         for(var i = 0; i < data.last_posts.length; i++ ){
             chatMessagesElem.append(data.last_posts[i]);
         }
     });
 
     socket.on('new post', function(data){
-        console.log('I got a new post!', data, chatMessagesElem);
-
         chatMessagesElem.append( data.fLine );
-        //chatMessageElem.append(data.newPost);
     });
 
     socket.on('new post sync', function(data){
-        console.log('I got a new post sync!', data, chatMessagesElem);
         var selector = 'li[data-clientpostguid="'+data.postClientGUID+'"]';
         var post = chatMessagesElem.children(selector);
-        console.log('The post to update: ', selector, post);
         if(post.length){
-            console.log('setting post id to ', data.postId);
             $(post[0])
                 .data('id', data.postId)
                 .attr('data-id', data.postId);
+        }else{
+            // todo: if the post does not exist, add it instead.
+            chatMessagesElem.append( data.fLine );
         }
 
     });

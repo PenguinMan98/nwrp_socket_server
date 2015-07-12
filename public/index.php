@@ -110,8 +110,6 @@
                 });
                 chatMessageInput.on('keyup', function( e ){
                     if(!shiftDown && e.which == 13){ // just a regular enter key
-                        console.log('Enter Pressed!');
-
                         socket.emit('new post', {
                             username: username, // The name of the user account
                             userId: userId, // The name of the user account
@@ -122,6 +120,9 @@
                             text: chatMessageInput.val()
                         });
                         chatMessageInput.val('');
+                    }else if(e.which == 13){
+                        console.log('Shift+Enter detected');
+                        // todo: change the input from a text input to textarea
                     }
                     if(e.which == 16){
                         shiftDown = false;

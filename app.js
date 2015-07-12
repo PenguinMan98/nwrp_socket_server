@@ -36,7 +36,7 @@ var BBCodeParser = require('bbcode-parser');
 var parser = new BBCodeParser( bbTags );
 
 server.listen(port, function () {
-    console.log('Server listening at port %d', port);
+    //console.log('Server listening at port %d', port);
 });
 
 // Routing
@@ -83,7 +83,6 @@ io.on('connection', function (socket) {
                     });
                     db.getPublicPosts( connection, data.roomId, function( dbResp ){
                         if( dbResp.success ){
-                            console.log('sending last_posts');
                             socket.emit( 'last_posts', {
                                 roomId: dbResp.roomId,
                                 last_posts: dbResp.last_posts // the most recent 50 posts
@@ -112,9 +111,6 @@ io.on('connection', function (socket) {
     });
 
     socket.on('new post', function(data){
-        console.log('new post', JSON.stringify(data));
-        var tsMicro = new Date();
-        var ts = Math.floor(tsMicro / 1000);
         var thisMoment = moment().utcOffset(-5);
         var isPrivate = data.recipient_username ? true : false;
         var isSystem = false; // todo: implement system commands
@@ -153,7 +149,8 @@ io.on('connection', function (socket) {
                         if(dbResp.success){
                             socket.emit('new post sync', {
                                 postId: dbResp.postId,
-                                postClientGUID: dbResp.postClientGUID
+                                postClientGUID: dbResp.postClientGUID,
+                                fLine: dbResp.fLine // this is in the off chance the client doesn't have the post.
                             });
                         }
                     });

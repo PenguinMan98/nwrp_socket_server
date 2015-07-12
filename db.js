@@ -33,7 +33,7 @@ module.exports = {
         });
     },
     getPublicPosts: function( connection, roomId, callback ){
-        console.log('getting posts for room ', roomId);
+        //console.log('getting posts for room ', roomId);
         connection.query('SELECT temp.*, c.icon, c.chat_name_color, c.chat_text_color, FROM_UNIXTIME(temp.timestamp,"%h:%i:%s %p") as f_time, FROM_UNIXTIME(temp.timestamp,"%a, %M %e") as f_date FROM (SELECT * FROM chat_log WHERE chat_room_id = 1 AND chat_log_type_id=? ORDER BY chat_log_id DESC LIMIT 50) AS temp JOIN `character` c ON temp.character_id=c.character_id ORDER BY chat_log_id ASC;', [roomId], function(err, rows, fields) {
             if (err){
                 callback({
@@ -51,7 +51,7 @@ module.exports = {
         });
     },
     getLoggedInCharacters: function( connection, roomId, callback ){
-        //console.log('getting character details for room ', roomId);
+        console.log('getting character details');
         connection.query('SELECT c.character_id, c.name, c.status, c.icon, c.chat_name_color, c.chat_text_color, c.chat_status_id, c.character_race_id, c.cutie_mark, UNIX_TIMESTAMP() - c.last_activity AS \'idle_timer\', c.chat_room_id FROM `character` c JOIN `character_login_log` cll ON c.character_id=cll.character_id WHERE cll.login_active=1;', [], function(err, rows, fields) {
             if (err){
                 callback({
@@ -62,14 +62,12 @@ module.exports = {
 
                 callback({
                     success: true,
-                    roomId: roomId,
                     public_characters: rows
                 })
             }
         });
     },
     insertNewPost: function( connection, data, callback ){
-        console.log('insertNewPost', data);
         connection.query('INSERT INTO chat_log (`chat_room_id`,`user_id`,`handle`,`character_id`,' +
             '`recipient_user_id`,`recipient_username`,`text`,`timestamp`,`chat_name_color`,' +
             '`chat_rand`,`chat_text_color`,`chat_log_type_id`,`viewed` ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);',
@@ -94,10 +92,15 @@ module.exports = {
                     err: err
                 });
             }else{
+                // add the new post id
+                data.postId = result.insertId;
+                // rebuild the line html with the post id
+                var fLine = chat.formatChatLine( data );
                 callback({
                     success: true,
-                    postId: result.insertId ,
-                    postClientGUID: data.clientPostGUID
+                    postId: result.insertId , // this is the new post id
+                    postClientGUID: data.clientPostGUID, // this is used to match the post already on the page.
+                    fLine: fLine // this is in the off chance the client doesn't have the post.
                 })
             }
         });
