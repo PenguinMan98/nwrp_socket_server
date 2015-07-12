@@ -9,11 +9,15 @@ var port = process.env.PORT || 3000;
 var db = require('./db.js');
 var chat = require('./chat.js');
 var async = require('async');
-var stripper = require('striptags');
+var moment = require('moment');
+moment.locale('nwrp', {
+    weekdaysShort : "Sun_Mon_Tue_Wed_Thu_Fri_Sat".split('_')
+});
+
 {
     var BBTag = require('bbcode-parser/bbTag');
     var bbTags = new Array();
-//Simple tags
+    //Simple tags
     bbTags["b"] = new BBTag("b", true, false, false);
     bbTags["i"] = new BBTag("i", true, false, false);
     bbTags["u"] = new BBTag("u", true, false, false);
@@ -109,6 +113,10 @@ io.on('connection', function (socket) {
 
     socket.on('new post', function(data){
         console.log('new post', JSON.stringify(data));
+        var tsMicro = new Date();
+        var ts = Math.floor(tsMicro / 1000);
+        var isPrivate = data.recipient_username ? true : false;
+        var isSystem = false; // todo: implement system commands
         var formattedData = {
             chat_log_id: null,
             chat_room_id: data.roomId,
@@ -118,15 +126,15 @@ io.on('connection', function (socket) {
             recipient_user_id: '',
             recipient_username: '',
             text: data.text,
-            timestamp: '',
+            timestamp: ts,
             chat_name_color: data.characterData.chat_name_color,
-            chat_rand: '',
+            chat_rand: tsMicro,
             chat_text_color: data.characterData.chat_text_color,
-            chat_log_type_id: '',
+            chat_log_type_id: isPrivate ? 2 : isSystem ? 3 : 1,
             viewed: '',
             icon: data.characterData.icon,
-            f_time: '',
-            f_date: ''
+            f_time: moment().add(1, 'hours').format('hh:mm:ss A'),
+            f_date: moment().add(1, 'hours').format('ddd, MMM M')
         };
         data.fLine = chat.formatChatLine(formattedData);
 
