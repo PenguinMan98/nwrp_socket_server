@@ -65,4 +65,18 @@ function initSocketListeners( socket ){
         chatMessagesElem.append( data.fLine );
         //chatMessageElem.append(data.newPost);
     });
+
+    socket.on('new post sync', function(data){
+        console.log('I got a new post sync!', data, chatMessagesElem);
+        var selector = 'li[data-clientpostguid="'+data.postClientGUID+'"]';
+        var post = chatMessagesElem.children(selector);
+        console.log('The post to update: ', selector, post);
+        if(post.length){
+            console.log('setting post id to ', data.postId);
+            $(post[0])
+                .data('id', data.postId)
+                .attr('data-id', data.postId);
+        }
+
+    });
 }

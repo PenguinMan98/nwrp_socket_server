@@ -87,18 +87,17 @@ module.exports = {
                 data.chat_text_color,
                 data.chat_log_type_id,
                 data.viewed
-            ], function(err, rows, fields) {
+            ], function(err, result) {
             if (err){
                 callback({
                     success: false,
                     err: err
                 });
-            }else if( rows.length > 0){
-
+            }else{
                 callback({
                     success: true,
-                    roomId: roomId,
-                    public_characters: rows
+                    postId: result.insertId ,
+                    postClientGUID: data.clientPostGUID
                 })
             }
         });

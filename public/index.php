@@ -118,7 +118,7 @@
                             characterData: myCharacterData, // the currently active character
                             token: token, // The validation token
                             roomId: roomId, // the id of the room they are in (or 0 if PM)
-                            clientGUID: handle + Date.now(), // a unique identifier for this post specific to this client instance. handle+timestamp
+                            clientPostGUID: handle + Date.now(), // a unique identifier for this post specific to this client instance. handle+timestamp
                             text: chatMessageInput.val()
                         });
                         chatMessageInput.val('');

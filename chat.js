@@ -52,7 +52,8 @@ module.exports = {
 
         //console.log('post', post, formattedText);
 
-        html = '<li data-id="'+post.chat_log_id+'" class="chat line" style="'+liStyle+'">' +
+        var clientPostGUID = post.clientPostGUID ? ' data-clientPostGUID="'+post.clientPostGUID+'"': '';
+        html = '<li data-id="'+post.chat_log_id+'" class="chat line"'+clientPostGUID+' style="'+liStyle+'">' +
         '<span title="'+post.f_date+'" class="chat date" style="">'+post.f_time+'</span>';
 
         if(formattedText.indexOf("/me") === 0){

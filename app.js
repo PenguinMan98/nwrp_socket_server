@@ -135,7 +135,8 @@ io.on('connection', function (socket) {
             viewed: isPrivate ? 0 : 1,
             icon: data.characterData.icon,
             f_time: thisMoment.format('hh:mm:ss A'),
-            f_date: thisMoment.format('ddd, MMM M')
+            f_date: thisMoment.format('ddd, MMM M'),
+            clientPostGUID: data.clientPostGUID
         };
         data.fLine = chat.formatChatLine(formattedData);
 
@@ -151,7 +152,8 @@ io.on('connection', function (socket) {
                     db.insertNewPost( connection, formattedData, function( dbResp ){
                         if(dbResp.success){
                             socket.emit('new post sync', {
-
+                                postId: dbResp.postId,
+                                postClientGUID: dbResp.postClientGUID
                             });
                         }
                     });
