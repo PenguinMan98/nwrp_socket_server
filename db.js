@@ -32,6 +32,22 @@ module.exports = {
             }
         });
     },
+    getMyCharacters: function( connection, userId, callback ){
+        connection.query('SELECT c.character_id, c.name, c.status, c.icon, c.chat_name_color, c.chat_text_color, c.chat_status_id, c.character_race_id, c.cutie_mark, UNIX_TIMESTAMP() - c.last_activity AS \'idle_timer\', c.chat_room_id FROM `character` c JOIN `character_user` cu ON c.character_id=cu.character_id WHERE cu.user_id=? ORDER BY c.name;', [userId], function(err, rows, fields) {
+            if (err){
+                callback({
+                    success: false,
+                    err: err
+                });
+            }else if( rows.length > 0){
+
+                callback({
+                    success: true,
+                    myCharacters: rows
+                })
+            }
+        });
+    },
     getPublicPosts: function( connection, roomId, callback ){
         //console.log('getting posts for room ', roomId);
         connection.query('SELECT temp.*, c.icon, c.chat_name_color, c.chat_text_color, FROM_UNIXTIME(temp.timestamp,"%h:%i:%s %p") as f_time, FROM_UNIXTIME(temp.timestamp,"%a, %M %e") as f_date FROM (SELECT * FROM chat_log WHERE chat_room_id = 1 AND chat_log_type_id=? ORDER BY chat_log_id DESC LIMIT 50) AS temp JOIN `character` c ON temp.character_id=c.character_id ORDER BY chat_log_id ASC;', [roomId], function(err, rows, fields) {

@@ -7,7 +7,7 @@
     $loggedIn = true;
     $username = "Tek Croon";
     $userId = "2";
-    $handle = "Tek_Croon";
+    $handle = null;
     $token = "pengy98";
     $roomId = 1;
 ?><!doctype html>
@@ -78,10 +78,7 @@
         <div class="characterForm">
             <h3 class="title">Choose your Character:</h3>
             <select class="handleInput">
-                <option value="char1">char1</option>
-                <option value="char2">char2</option>
-                <option value="char3">char3</option>
-                <option value="char4">char4</option>
+                <option value="">LOADING</option>
             </select><br>
             Or
             <h3>Use a Guest Character:</h3>
@@ -109,6 +106,7 @@
     var myCharacterData = null;
     var roomCharactersElem;
     var otherRoomCharactersElem;
+    var characterSelectElem;
 
     var loggedIn = <?=$loggedIn?'true':'false'?>;
     var username = "<?=$username?>";
@@ -126,13 +124,16 @@
         chatMessageInput = $('.inputMessage');
         roomCharactersElem = $('#roomCharacters');
         otherRoomCharactersElem = $('#otherRoomCharacters');
+
         var shiftDown = false;
 
         // primary setup
         if( loggedIn ){
             if( !handle ){
-                // send a request to the server for the character list
                 characterChoiceElem.show();
+                // send a request to the server for the character list
+                Login.initSockets( socket );
+                Login.getMyCharacters( socket, username, userId, token);
             }else{
                 // all is well. Start chatting!
                 connected = true;

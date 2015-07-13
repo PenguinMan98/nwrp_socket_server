@@ -92,6 +92,8 @@ io.on('connection', function (socket) {
                         }
                     });
 
+                    // send room list
+                    console.log('sending room list');
                     // send weather
                     console.log('sending weather for room', data.roomId);
                     // send motd
@@ -151,6 +153,23 @@ io.on('connection', function (socket) {
                                 postId: dbResp.postId,
                                 postClientGUID: dbResp.postClientGUID,
                                 fLine: dbResp.fLine // this is in the off chance the client doesn't have the post.
+                            });
+                        }
+                    });
+                }
+            })
+        });
+    });
+    socket.on('my characters', function(data){
+        // initialize the db
+        db.init(function(err, connection){
+            // first lets check the user credentials
+            db.validateUser(connection, data.username, data.token, function( dbResp ){
+                if( dbResp.validated ){
+                    db.getMyCharacters( connection, data.userId, function( dbResp ){
+                        if(dbResp.success){
+                            socket.emit('my characters', {
+                                myCharacters: dbResp.myCharacters
                             });
                         }
                     });

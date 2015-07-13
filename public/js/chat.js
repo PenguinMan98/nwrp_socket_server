@@ -4,8 +4,6 @@
 
 var Chat = {
     buildPlayerList: function(){
-        console.log('buildPlayerList', characterData);
-
         //var playerList;
         var roomList = [];
         var otherRoomList = [];
@@ -13,7 +11,6 @@ var Chat = {
 
         for(var i=0; i<characterData.length; i++){
             char = characterData[i];
-            console.log( char );
             if(roomId == char.chat_room_id){
                 roomList.push(char);
             }else{
@@ -23,7 +20,6 @@ var Chat = {
                 otherRoomList[chat.chat_room_id].push(char);
             }
         }
-        console.log('character lists created', roomList, otherRoomList);
         var roomListHTML = "<ul>";
         for(i = 0; i < roomList.length; i++){
             roomListHTML += "<li>" + roomList[i].name + "</li>";
