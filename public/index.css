@@ -220,3 +220,18 @@ ul {
     right: 0;
     width: 100%;
 }
+
+/*==================== Right Hand Column ======================*/
+
+.chat.page .chatArea .right.column #accordion .characterList{
+    margin: 0px;
+    padding: 0px;
+}
+.chat.page .chatArea .right.column #accordion .characterList ul{
+    margin: 0px;
+    padding: 0px;
+}
+.chat.page .chatArea .right.column #accordion .characterList ul li{
+    margin: 0px;
+    padding: 0px;
+}

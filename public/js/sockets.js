@@ -44,6 +44,7 @@ function initSocketListeners( socket ){
                 myCharacterData = char;
             }
         }
+        Chat.buildPlayerList();
     });
 
     // listen for posts

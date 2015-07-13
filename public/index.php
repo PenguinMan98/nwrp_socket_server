@@ -16,6 +16,7 @@
     <meta charset="UTF-8">
     <title>Socket.IO Chat Example</title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="js/jQueryUI/jquery-ui.min.css">
 </head>
 <body>
 <ul class="pages">
@@ -24,8 +25,43 @@
         <div class="top announcements">This will hold site announcements.</div>
         <div class="chatArea">
             <div class="right column">
-                This is the right hand column
+                <div id="room">
+                    Room Sign
+                </div>
+                <div id="weather">
+                    Weather Widget
+                </div>
+                <div id="accordion">
+                    <!--<h3>Player List</h3>
+                    <div id="playerList" class="characterList">
+                        <ul>
+                            <li>Player1</li>
+                            <li>Player2</li>
+                            <li>Player3</li>
+                            <li>Player4</li>
+                        </ul>
+                    </div>-->
+                    <h3>Characters in Room</h3>
+                    <div id="roomCharacters" class="characterList">
+                        <ul>
+                            <li>Player1</li>
+                            <li>Player2</li>
+                            <li>Player3</li>
+                            <li>Player4</li>
+                        </ul>
+                    </div>
+                    <h3>Characters Elsewhere</h3>
+                    <div id="otherRoomCharacters" class="characterList">
+                        <ul>
+                            <li>Player1</li>
+                            <li>Player2</li>
+                            <li>Player3</li>
+                            <li>Player4</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+            <div style="width: 100%; clear: both;"></div>
             <ul class="messages"></ul>
         </div>
         <input class="inputMessage" placeholder="Type here..."/>
@@ -56,6 +92,8 @@
 
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://nwrp-sockets.local:3000/socket.io/socket.io.js"></script>
+<script src="js/jQueryUI/jquery-ui.min.js"></script>
+<script src="js/config.js"></script>
 <script src="js/login.js"></script>
 <script src="js/chat.js"></script>
 <script src="js/sockets.js"></script>
@@ -69,6 +107,8 @@
     var chatMessageInput = null;
     var characterData = [];
     var myCharacterData = null;
+    var roomCharactersElem;
+    var otherRoomCharactersElem;
 
     var loggedIn = <?=$loggedIn?'true':'false'?>;
     var username = "<?=$username?>";
@@ -84,6 +124,8 @@
         chatElem = $('.chat.page');
         chatMessagesElem = $('.chat.page .messages');
         chatMessageInput = $('.inputMessage');
+        roomCharactersElem = $('#roomCharacters');
+        otherRoomCharactersElem = $('#otherRoomCharacters');
         var shiftDown = false;
 
         // primary setup
@@ -129,6 +171,10 @@
                     }
                 });
             }
+            $("#accordion").accordion({
+                collapsible: true,
+                heightStyle: "fill"
+            });
         }else{
             loginElem.show();
         }
