@@ -2,14 +2,24 @@
     // First things first, bootstrap me.
     require('../new_chat/init.php');
 
-    // now, are we logged in?
-    // todo: Check if we are logged in or not
-    $loggedIn = true;
-    $username = "Tek Croon";
-    $userId = "2";
+    // check for tiki session login
+    $loggedIn = !empty($_SESSION['u_info']['login']);
+
+    // post processing
+    $username = null;
+    $userId = null;
     $handle = null;
-    $token = "pengy98";
+    $token = null;
     $roomId = 1;
+
+    // were details submitted?
+    if($_POST['handle']){
+        $handle = preg_replace('/[\W]/i','',preg_replace('/[\s]/i','_',$_POST['handle']));
+
+        // log the character in
+        var_dump($_SESSION);
+
+    }
 ?><!doctype html>
 <html lang="en">
 <head>
@@ -44,19 +54,13 @@
                     <h3>Characters in Room</h3>
                     <div id="roomCharacters" class="characterList">
                         <ul>
-                            <li>Player1</li>
-                            <li>Player2</li>
-                            <li>Player3</li>
-                            <li>Player4</li>
+                            <li>Loading</li>
                         </ul>
                     </div>
                     <h3>Characters Elsewhere</h3>
                     <div id="otherRoomCharacters" class="characterList">
                         <ul>
-                            <li>Player1</li>
-                            <li>Player2</li>
-                            <li>Player3</li>
-                            <li>Player4</li>
+                            <li>Loading</li>
                         </ul>
                     </div>
                 </div>
@@ -69,20 +73,28 @@
     <li class="login page">
         <div class="loginForm">
             <h3 class="title">Username: </h3>
-            <input class="usernameInput" type="text" />
+            <input class="usernameInput" type="text" name="username"/>
             <h3 class="title">Password: </h3>
-            <input class="passwordInput" type="password" />
+            <input class="usernameInput" type="password" name="password" /><br>
+            <input type="button" id="player_login" value="Log In">
         </div>
     </li>
     <li class="characterChoice page">
         <div class="characterForm">
-            <h3 class="title">Choose your Character:</h3>
-            <select class="handleInput">
-                <option value="">LOADING</option>
-            </select><br>
+            <form id="chooseCharacterForm" method="post">
+                <input type="hidden" name="userId" value="<?php echo $userId; ?>">
+                <input type="hidden" name="username" value="<?php echo $username; ?>">
+                <input type="hidden" name="token" value="<?php echo $token; ?>">
+                <h3 class="title">Choose your Character:</h3>
+                <select class="handleInput" name="handle">
+                    <option value="">LOADING</option>
+                </select><br>
+                <input type="submit" value="Enter Chat">
+            </form><br>
             Or
             <h3>Use a Guest Character:</h3>
-            <input type="text" value="" placeholder="Guest Handle" maxlength="25" />
+            <input type="text" value="" placeholder="Guest Handle" maxlength="25" /><br>
+            <input type="submit" value="Unavailable at Present">
         </div>
     </li>
 </ul>
@@ -124,6 +136,7 @@
         chatMessageInput = $('.inputMessage');
         roomCharactersElem = $('#roomCharacters');
         otherRoomCharactersElem = $('#otherRoomCharacters');
+        characterSelectElem = $('#chooseCharacterForm select');
 
         var shiftDown = false;
 
@@ -133,7 +146,7 @@
                 characterChoiceElem.show();
                 // send a request to the server for the character list
                 Login.initSockets( socket );
-                Login.getMyCharacters( socket, username, userId, token);
+                Login.getMyCharacters( socket, username, userId );
             }else{
                 // all is well. Start chatting!
                 connected = true;
@@ -178,6 +191,13 @@
             });
         }else{
             loginElem.show();
+
+            $('#player_login').on('click', function(){
+                console.log('trying to log in', $('.loginForm input[name="username"]').val(), $('.loginForm input[name="password"]').val());
+                Login.doLogin( $('.loginForm input[name="username"]').val(), $('.loginForm input[name="password"]').val(), function( loginResp ){
+                    console.log('login completed', loginResp)
+                });
+            });
         }
 
     });

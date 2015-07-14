@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 // bootstrap code for setting up the chat environment.
 
 // load security
@@ -9,4 +9,5 @@
 // define constants
 
 // common functions
+
 

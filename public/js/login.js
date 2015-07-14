@@ -1,13 +1,14 @@
 
 var Login = {
     doLogin: function(username, password, callback){
+        console.log('doLogin called');
         $.ajax({
             url: "my-tiki-login.php",
             data: {user: username, pass:password },
             dataType: "JSON"
         })
             .done(function(response) {
-                if(response.success){
+                /*if(response.success){
                     $('#login_fields').hide();
                 }
                 if(response.success && response.characterList.length > 0){ // if this succeeds, we found a reserved character name
@@ -32,9 +33,9 @@ var Login = {
                 }else{ // there was an error
                     $('#login_form_error').show();
                     $('#login_form_error').html('**' + response.error + '<br>');
-                }
+                }*/
+                callback( response );
             });
-
     },
     initSockets: function(socket){
         socket.emit

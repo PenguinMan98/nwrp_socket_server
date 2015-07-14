@@ -163,18 +163,13 @@ io.on('connection', function (socket) {
     socket.on('my characters', function(data){
         // initialize the db
         db.init(function(err, connection){
-            // first lets check the user credentials
-            db.validateUser(connection, data.username, data.token, function( dbResp ){
-                if( dbResp.validated ){
-                    db.getMyCharacters( connection, data.userId, function( dbResp ){
-                        if(dbResp.success){
-                            socket.emit('my characters', {
-                                myCharacters: dbResp.myCharacters
-                            });
-                        }
+            db.getMyCharacters( connection, data.userId, function( dbResp ){
+                if(dbResp.success){
+                    socket.emit('my characters', {
+                        myCharacters: dbResp.myCharacters
                     });
                 }
-            })
+            });
         });
     });
 

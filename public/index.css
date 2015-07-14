@@ -127,7 +127,7 @@ ul {
 }
 
 .characterChoice.page .title, .login.page .usernameInput {
-    color: #ddd;
+    color: #333;
     font-weight: 100;
 }
 
@@ -194,7 +194,7 @@ ul {
 }
 
 .message.typing .messageBody {
-    color: gray;
+    color: #333;
 }
 
 .username {
